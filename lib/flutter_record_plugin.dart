@@ -15,7 +15,7 @@ class FlutterRecordPlugin {
   static LocalFileSystem fs = LocalFileSystem();
 
   static Future start(
-      {String path, AudioOutputFormat audioOutputFormat}) async {
+      {String? path, AudioOutputFormat? audioOutputFormat}) async {
     String extension;
     if (path != null) {
       if (audioOutputFormat != null) {
@@ -51,11 +51,11 @@ class FlutterRecordPlugin {
     Map<String, Object> response =
     Map.from(await _channel.invokeMethod('stop'));
     Recording recording = new Recording(
-        duration: new Duration(milliseconds: response['duration']),
-        path: response['path'],
+        duration: new Duration(milliseconds:int.parse(response['duration'].toString()) ),
+        path: response['path'].toString(),
         audioOutputFormat:
-        _convertStringInAudioOutputFormat(response['audioOutputFormat']),
-        extension: response['audioOutputFormat']);
+        _convertStringInAudioOutputFormat(response['audioOutputFormat'].toString()),
+        extension: response['audioOutputFormat'].toString());
     return recording;
   }
 
@@ -78,7 +78,7 @@ class FlutterRecordPlugin {
       case ".m4a":
         return AudioOutputFormat.AAC;
       default:
-        return null;
+        return AudioOutputFormat.AAC;
     }
   }
 
@@ -119,5 +119,5 @@ class Recording {
   // Audio output format
   AudioOutputFormat audioOutputFormat;
 
-  Recording({this.duration, this.path, this.audioOutputFormat, this.extension});
+  Recording({required this.duration,required this.path,required this.audioOutputFormat,required this.extension});
 }
